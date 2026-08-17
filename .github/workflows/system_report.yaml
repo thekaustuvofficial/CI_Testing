@@ -3,7 +3,7 @@ name: System Report
 on: push
 
 jobs:
-  System-Report-display:
+  System-info:
     runs-on: ubuntu-latest
     steps:
       - name: System Report
@@ -13,14 +13,12 @@ jobs:
           date
           sudo apt-get install tree
           tree -L 2 ~
-
-  # echo-goodbye: 
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Failed step
-  #       run: |
-  #         echo "This step will fail"
-  #         exit 0
-
-  #     - name: Say goodbye
-  #       run: echo "Goodbye, World!"
+  tool-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: System Report
+        run: |
+          sudo apt-get install jq
+          cat report.json
+          python --version
+          git -v
