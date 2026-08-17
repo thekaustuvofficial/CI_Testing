@@ -11,6 +11,8 @@ jobs:
           uname -a
           df -h
           date
+          apt-get install tree
+          tree -L 2 ~
 
   # echo-goodbye: 
   #   runs-on: ubuntu-latest
