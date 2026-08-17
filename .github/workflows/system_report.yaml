@@ -3,7 +3,7 @@ name: System Report
 on: push
 
 jobs:
-  echo-hello:
+  System-Report-display:
     runs-on: ubuntu-latest
     steps:
       - name: System Report
@@ -12,13 +12,13 @@ jobs:
           df -h
           date
 
-  echo-goodbye: 
-    runs-on: ubuntu-latest
-    steps:
-      - name: Failed step
-        run: |
-          echo "This step will fail"
-          exit 0
+  # echo-goodbye: 
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Failed step
+  #       run: |
+  #         echo "This step will fail"
+  #         exit 0
 
-      - name: Say goodbye
-        run: echo "Goodbye, World!"
+  #     - name: Say goodbye
+  #       run: echo "Goodbye, World!"
