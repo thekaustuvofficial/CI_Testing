@@ -1,0 +1,23 @@
+name: Release_Watcher
+
+on: 
+    push:
+        branches: main
+    schedule:
+        - cron: '0 9 * * MON'
+    workflow_dispatch:
+    
+
+jobs:
+
+  watch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: print
+        run: |
+           echo ""This was triggered by ${{github.event_name}} event."
+           date
+            echo "Release watch complete"
+
+
