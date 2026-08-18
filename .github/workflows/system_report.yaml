@@ -1,6 +1,8 @@
 name: System Report
 
-on: push
+on: 
+  push:
+  workflow_dispatch:
 
 jobs:
 
