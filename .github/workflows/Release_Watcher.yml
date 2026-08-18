@@ -16,8 +16,8 @@ jobs:
     steps:
       - name: print
         run: |
-           echo ""This was triggered by ${{github.event_name}} event."
+           echo "This was triggered by ${{github.event_name}} event."
            date
-            echo "Release watch complete"
+           echo "Release watch complete"
 
 
