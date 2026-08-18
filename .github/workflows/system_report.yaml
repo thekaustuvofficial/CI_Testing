@@ -3,22 +3,41 @@ name: System Report
 on: push
 
 jobs:
-  System-info:
+
+  system-info:
     runs-on: ubuntu-latest
+
     steps:
       - name: System Report
         run: |
-          uname -a
+          uname -s
+          uname -r
           df -h
           date
-          sudo apt-get install tree
+          sudo apt-get update
+          sudo apt-get install -y tree
           tree -L 2 ~
+
+
   tool-check:
     runs-on: ubuntu-latest
+
     steps:
-      - name: System Report
+      - name: Tool Check
         run: |
-          sudo apt-get install jq
-          cat report.json
-          python --version
-          git -v
+          sudo apt-get update
+          sudo apt-get install -y jq
+
+          echo '{
+            "os": "Ubuntu",
+            "runner": "GitHub Actions",
+            "status": "success"
+          }' > report.json
+
+          jq '.status' report.json
+
+          python3 --version
+          git --version
+          jq --version
+
+          echo "Report complete"
