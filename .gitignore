@@ -1,4 +1,5 @@
-node_modules # for local machines only
+node_modules 
+# for local machines only
 lexi.class 
 lexi.java
 plain-partitioning.class
