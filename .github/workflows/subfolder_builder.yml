@@ -1,0 +1,29 @@
+name: Subfolder Builder
+
+on: 
+    push:
+    workflow_dispatch:
+    
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    defaults: 
+      run:
+        working-directory: myapp
+
+    steps:
+      
+      - name: Check the REPO
+        uses: actions/checkout@v7
+    
+      - name: Setup Runtime
+        uses: actions/setup-node@v7
+        
+      - name: Print Current Working Directory and contents in the folder
+        run: |
+            pwd  
+            ls
+            find . -type f | wc -l
+            echo "Build Folder Confirmed"
