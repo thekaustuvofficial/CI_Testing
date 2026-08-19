@@ -1,0 +1,28 @@
+name: Checkout Proof
+
+on: 
+    push:
+    workflow_dispatch:
+    
+
+jobs:
+
+  prove:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Current path and folders
+        run: |
+             pwd
+             ls
+
+      - name: Check the REPO
+        uses: actions/checkout@v7
+        
+      - name: Print Contents of Folder  
+        run: ls
+                  
+      - name: Find number of files
+        run : |
+            find . -type f | wc -l
+            echo "Proof Captured"
