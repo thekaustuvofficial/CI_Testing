@@ -4,6 +4,10 @@ run-name:
 on: 
     
     workflow_dispatch:
+        inputs: 
+            debug:
+                type: boolean
+                default: false
     
 
 jobs:
