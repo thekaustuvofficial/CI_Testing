@@ -1,0 +1,32 @@
+name: Using Expressions
+run-name: 
+
+on: 
+    
+    workflow_dispatch:
+    
+
+jobs:
+
+  echo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: '[Debug] Print start up data'
+        if: inputs.debug
+        run: |
+            echo "Debug node is ON"
+            echo "Workflow name: ${{github.workflow}}"
+            echo "Run ID: ${{github.run_id}}"
+            echo "Run number ${{github.run_number}}"
+            echo "Event name ${{github.event_name}}"
+            echo "Actor  ${{github.actor}}"
+            echo "Repo ${{github.repository}}"
+            echo "Branch ${{github.ref_name}}"
+            echo "SHA ${{github.sha}}"
+
+      - name: '[Debug] print when triggered from main'
+        if: inputs.debug && github.ref_name == 'main'
+        run : |
+            echo "This workflow was triggered from the main branch"
+        
