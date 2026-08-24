@@ -57,19 +57,29 @@ jobs:
 
     steps:
       - name: Print run information
+        env:
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          ACTOR: ${{ github.actor }}
+          RUN_NUMBER: ${{ github.run_number }}
         run: |
-          echo "Event: ${{ github.event_name }}"
-          echo "Ref: ${{ github.ref }}"
-          echo "Actor: ${{ github.actor }}"
-          echo "Run number: ${{ github.run_number }}"
+          echo "Event: $EVENT"
+          echo "Ref: $REF"
+          echo "Actor: $ACTOR"
+          echo "Run number: $RUN_NUMBER"
 
       - name: Print manual inputs
         if: ${{ github.event_name == 'workflow_dispatch' }}
+        env:
+          SEVERITY: ${{ inputs.severity }}
+          DEEP_SCAN: ${{ inputs.deep_scan }}
+          SKIP_TESTS: ${{ inputs.skip_tests }}
+          REASON: ${{ inputs.reason }}
         run: |
-          echo "Severity: ${{ inputs.severity }}"
-          echo "Deep scan: ${{ inputs.deep_scan }}"
-          echo "Skip tests: ${{ inputs.skip_tests }}"
-          echo "Reason: ${{ inputs.reason }}"
+          echo "Severity: $SEVERITY"
+          echo "Deep scan: $DEEP_SCAN"
+          echo "Skip tests: $SKIP_TESTS"
+          echo "Reason: $REASON"
 
       - name: Print automatic run
         if: ${{ github.event_name != 'workflow_dispatch' }}
@@ -78,15 +88,18 @@ jobs:
 
       - name: Low severity
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.severity == 'low' }}
-        run: echo "Low severety incident: standard investigation is sufficient."
+        run: |
+          echo "Low severity incident: standard investigation is sufficient."
 
       - name: Medium severity
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.severity == 'medium' }}
-        run: echo "Medium severity incident: increased investigation is required."
+        run: |
+          echo "Medium severity incident: increased investigation is required."
 
       - name: High severity
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.severity == 'high' }}
-        run: echo "High severity incident: immediate investigation and scanning required."
+        run: |
+          echo "High severity incident: immediate investigation and scanning required."
 
 
   tests:
@@ -125,16 +138,23 @@ jobs:
 
     steps:
       - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
 
       - name: Create scan report
+        env:
+          SEVERITY: ${{ inputs.severity }}
+          DEEP_SCAN: ${{ inputs.deep_scan }}
+          ACTOR: ${{ github.actor }}
+          RUN_NUMBER: ${{ github.run_number }}
         run: |
           cat > scan.json <<EOF
           {
-            "severity": "${{ inputs.severity }}",
-            "deep_scan": ${{ inputs.deep_scan }},
-            "actor": "${{ github.actor }}",
-            "run_number": ${{ github.run_number }},
+            "severity": "$SEVERITY",
+            "deep_scan": $DEEP_SCAN,
+            "actor": "$ACTOR",
+            "run_number": $RUN_NUMBER,
             "time_utc": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
           }
           EOF
@@ -156,14 +176,20 @@ jobs:
 
     steps:
       - name: Print job results
+        env:
+          TESTS_RESULT: ${{ needs.tests.result }}
+          SCAN_RESULT: ${{ needs.scan.result }}
         run: |
-          echo "Tests: ${{ needs.tests.result }}"
-          echo "Scan: ${{ needs.scan.result }}"
+          echo "Tests: $TESTS_RESULT"
+          echo "Scan: $SCAN_RESULT"
 
       - name: Print summary
+        env:
+          TESTS_RESULT: ${{ needs.tests.result }}
+          SCAN_RESULT: ${{ needs.scan.result }}
         run: |
-          if [ "${{ needs.tests.result }}" = "success" ] || [ "${{ needs.tests.result }}" = "skipped" ]; then
-            if [ "${{ needs.scan.result }}" = "success" ] || [ "${{ needs.scan.result }}" = "skipped" ]; then
+          if [ "$TESTS_RESULT" = "success" ] || [ "$TESTS_RESULT" = "skipped" ]; then
+            if [ "$SCAN_RESULT" = "success" ] || [ "$SCAN_RESULT" = "skipped" ]; then
               echo "Everything that ran was successful."
             else
               echo "Some work completed successfully, but the scan failed."
@@ -173,4 +199,5 @@ jobs:
           fi
 
       - name: Close switchboard
-        run: echo "Switchboard closed"
+        run: |
+          echo "Switchboard closed"
